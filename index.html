@@ -39,7 +39,6 @@
             </div>
         </div>
 
-        <!-- JavaScript Code -->
         <script>
             async function fetchData(url) {
                 const response = await fetch(url)
@@ -55,6 +54,10 @@
                     const option = document.createElement("option")
                     option.value = item.id
                     option.text = item.name
+
+                    // Set untuk nama provinsi
+                    option.setAttribute("data-id", item.name)
+
                     selectElement.appendChild(option)
                 })
             }
@@ -63,21 +66,58 @@
                 await populateSelect("provinceId", "api/provinces.json")
             }
 
+            // PROVINSI
             async function populateRegencies() {
+                // Mendapatkan elemen select dengan id 'provinceId'
+                const provinsi = document.getElementById("provinceId")
+
+                // Mendapatkan option yang dipilih dari elemen select
+                const selectedOption = provinsi.options[provinsi.selectedIndex]
+
+                // Mengakses atribut data-id dari option yang dipilih
+                const dataId = selectedOption.dataset.id
+
+                // Menampilkan nilai dari atribut data-id
+                console.log("Data Provinsi:", dataId)
+
                 const provinceId = document.getElementById("provinceId").value
                 if (provinceId) {
                     await populateSelect("regencyId", `api/regencies/${provinceId}.json`)
                 }
             }
 
+            // KOTA / KABUPATEN
             async function populateDistricts() {
+                const kota = document.getElementById("regencyId")
+
+                // Mendapatkan option yang dipilih dari elemen select
+                const selectedOption = kota.options[kota.selectedIndex]
+
+                // Mengakses atribut data-id dari option yang dipilih
+                const dataId = selectedOption.dataset.id
+
+                // Menampilkan nilai dari atribut data-id
+                console.log("Data Kota:", dataId)
+
                 const regencyId = document.getElementById("regencyId").value
                 if (regencyId) {
                     await populateSelect("districtId", `api/districts/${regencyId}.json`)
                 }
             }
 
+            // KECAMATAN
             async function populateVillages() {
+                const kecamatan = document.getElementById("districtId")
+
+                // Mendapatkan option yang dipilih dari elemen select
+                const selectedOption = kecamatan.options[kecamatan.selectedIndex]
+
+                // Mengakses atribut data-id dari option yang dipilih
+                const dataId = selectedOption.dataset.id
+
+                // Menampilkan nilai dari atribut data-id
+                console.log("Data Kecamatan:", dataId)
+
                 const districtId = document.getElementById("districtId").value
                 if (districtId) {
                     await populateSelect("villageId", `api/villages/${districtId}.json`)
@@ -87,21 +127,24 @@
             document.addEventListener("DOMContentLoaded", () => {
                 populateProvinces()
 
+                // Provinsi
                 document.getElementById("provinceId").addEventListener("change", () => {
-                    document.getElementById("regencyId").innerHTML = "<option value=''></option>"
-                    document.getElementById("districtId").innerHTML = "<option value=''></option>"
-                    document.getElementById("villageId").innerHTML = "<option value=''></option>"
+                    document.getElementById("regencyId").innerHTML = "<option value=''>Pilih Kota</option>"
+                    document.getElementById("districtId").innerHTML = "<option value=''>Pilih Kecamatan</option>"
+                    document.getElementById("villageId").innerHTML = "<option value=''>Pilih Kelurahan</option>"
                     populateRegencies()
                 })
 
+                // Kota
                 document.getElementById("regencyId").addEventListener("change", () => {
-                    document.getElementById("districtId").innerHTML = "<option value=''></option>"
-                    document.getElementById("villageId").innerHTML = "<option value=''></option>"
+                    document.getElementById("districtId").innerHTML = "<option value=''>Pilih Kecamatan</option>"
+                    document.getElementById("villageId").innerHTML = "<option value=''>Pilih Kelurahan</option>"
                     populateDistricts()
                 })
 
+                // Kecamatan
                 document.getElementById("districtId").addEventListener("change", () => {
-                    document.getElementById("villageId").innerHTML = "<option value=''></option>"
+                    document.getElementById("villageId").innerHTML = "<option value=''>Pilih Kelurahan</option>"
                     populateVillages()
                 })
             })
