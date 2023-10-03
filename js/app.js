@@ -1,6 +1,3 @@
-
-
-
 async function fetchData(url) {
     const response = await fetch(url)
     const data = await response.json()
@@ -32,8 +29,6 @@ async function populateRegencies() {
 }
 
 async function populateDistricts() {
-
-
     const regencyName = document.getElementById("regencyId").value;
 
     if (regencyName) {
